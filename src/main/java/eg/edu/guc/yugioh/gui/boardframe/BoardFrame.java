@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import eg.edu.guc.yugioh.cards.MonsterCard;
 import eg.edu.guc.yugioh.cards.spells.SpellCard;
 import eg.edu.guc.yugioh.configsGlobais.Logger;
+import main.java.eg.edu.guc.yugioh.gui.boardframe.BoardFrameHelper;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -60,16 +61,7 @@ public class BoardFrame extends JFrame implements ActionListener{
 	}
 
 	private void addPanels(){
-		setContentPane(new JLabel(new ImageIcon("images/background.jpg")));
-		JPanel dataPanel = new JPanel();
-		dataPanel.setLayout(new BorderLayout());
-		dataPanel.setOpaque(false);
-		dataPanel.setSize(1366,768);
-		dataPanel.add(opponentHandPanel,BorderLayout.NORTH);
-		dataPanel.add(fieldPanel, BorderLayout.CENTER);
-		dataPanel.add(activeHandPanel,BorderLayout.SOUTH);
-		dataPanel.add(eastButtonsPanel,BorderLayout.EAST);
-		dataPanel.add(westImagesPanel,BorderLayout.WEST);
+		JPanel dataPanel = new BoardFrameHelper().addPanels(opponentHandPanel, fieldPanel, activeHandPanel, eastButtonsPanel, westImagesPanel, BorderLayout)
 		add(dataPanel);
 	}
 	
@@ -114,21 +106,7 @@ public class BoardFrame extends JFrame implements ActionListener{
 	}
 
 	public void updateBoardFrame() {
-
-			Logger.startLogs().info("BoardFrame - updateBoardFrame");
-
-			activeHandPanel.updateHand();
-			opponentHandPanel.updateHand();
-			fieldPanel.getActivePlayerPanel().getDeckGraveyardPanel().getDeck().updateDeck();
-			fieldPanel.getOpponentPlayerPanel().getDeckGraveyardPanel().getDeck().updateDeck();
-			fieldPanel.getActivePlayerPanel().getDeckGraveyardPanel().getGraveyard().updateGraveyard();
-			fieldPanel.getOpponentPlayerPanel().getDeckGraveyardPanel().getGraveyard().updateGraveyard();
-			fieldPanel.getActivePlayerPanel().getMonsterSpellPanel().getMonstersGrid().updateMonstersArea();
-			fieldPanel.getOpponentPlayerPanel().getMonsterSpellPanel().getMonstersGrid().updateMonstersArea();
-			fieldPanel.getActivePlayerPanel().getMonsterSpellPanel().getSpellsGrid().updateSpellsArea();
-			fieldPanel.getOpponentPlayerPanel().getMonsterSpellPanel().getSpellsGrid().updateSpellsArea();
-			fieldPanel.getActivePlayerPanel().getPlayerNamePanel().updateLifePoints();
-			fieldPanel.getOpponentPlayerPanel().getPlayerNamePanel().updateLifePoints();
+			new BoardFrameHelper().updateBoardFrame(activeHandPanel, opponentHandPanel, fieldPanel);
 			repaint();
 			validate();
 	}
