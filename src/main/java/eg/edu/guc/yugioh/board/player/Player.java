@@ -2,6 +2,11 @@ package eg.edu.guc.yugioh.board.player;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.JOptionPane;
 
 import eg.edu.guc.yugioh.cards.Card;
 import eg.edu.guc.yugioh.cards.Mode;
@@ -10,6 +15,7 @@ import eg.edu.guc.yugioh.cards.spells.SpellCard;
 import eg.edu.guc.yugioh.exceptions.IllegalSpellTargetException;
 import eg.edu.guc.yugioh.exceptions.MultipleMonsterAdditionException;
 import eg.edu.guc.yugioh.exceptions.UnexpectedFormatException;
+import eg.edu.guc.yugioh.configsGlobais.Logger;
 
 public class Player implements Duelist {
 
@@ -256,6 +262,43 @@ public class Player implements Duelist {
 
 	public void setLifePoints(int lifePoints) {
 		this.lifePoints = lifePoints;
+	}
+
+	public void takeDamage(int damage){
+
+		Logger.startLogs().info("Player - takeDamage Damage: " + damage );
+
+		int lp = getLifePoints();
+		setLifePoints(lp - damage);
+
+		Logger.startLogs().info("Player - takeDamage Lifepoints: " + getLifePoints() );
+
+		playDamageSong();
+
+
+	}
+
+	private void playDamageSong(){
+
+		Logger.startLogs().info("Player - playDamageSong");
+
+		String sourceSong;
+		if(getLifePoints() <=0 ) {
+			sourceSong = "src/main/resources/audios/gritoplayerlose.wav";
+		} else {
+			sourceSong = "src/main/resources/audios/gritoplayer.wav";
+		}
+
+		File musicPath = new File(sourceSong);
+
+		try{
+			AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInput);
+			clip.start();
+		} catch ( Exception e){
+
+			Logger.startLogs().error("Player - Exception: " + e + " " + musicPath.getName() );		}
 	}
 
 	public String getName() {
